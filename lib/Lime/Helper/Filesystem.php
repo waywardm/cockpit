@@ -55,6 +55,51 @@ class Filesystem extends \Lime\Helper {
     }
 
     /**
+     * @return array
+     */
+    public function lsNoSplFileObject() {
+        $pattern = null;
+        $dir     = null;
+
+        $args = func_get_args();
+        $lst  = [];
+
+        switch(count($args)){
+            case 0:
+                $dir = getcwd();
+            case 1:
+                $dir = (strpos($args[0], ':')) ? $this->app->path($args[0]) : $args[0];
+                break;
+            case 2:
+                $pattern = $args[0];
+                $dir = (strpos($args[1], ':')) ? $this->app->path($args[1]) : $args[1];
+                break;
+            default:
+                return $lst;
+        }
+
+        if (!$dir || !file_exists($dir)) {
+            return $lst;
+        }
+
+        $iter = new \DirectoryIterator($dir);
+
+        foreach ($iter as $file) {
+
+            if ($file->isDot()) continue;
+            if ($pattern && !fnmatch($pattern, $file->getBasename())) continue;
+
+            // $lst[] = $file->isDir() ? clone $file : new \SplFileObject($file->getRealPath());
+            
+            if (!$file->isDir())
+                $lst[] = ['filename' => $file->getFilename(), 'realpath' => $file->getRealPath()];
+
+        }
+
+        return $lst;
+    }
+
+    /**
      * @return bool|mixed
      */
     public function read() {
