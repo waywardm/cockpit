@@ -35,9 +35,9 @@
                                 <div>
                                     <a class="uk-dropdown-close" onclick="{ selectIcon }" icon=""><img src="@url('forms:icon.svg')" width="30" icon=""></a>
                                 </div>
-                                @foreach($app->helper("fs")->ls('*.svg', 'assets:app/media/icons') as $icon)
+                                @foreach($app->helper("fs")->lsNoSplFileObject('*.svg', 'assets:app/media/icons') as $icon)
                                 <div>
-                                    <a class="uk-dropdown-close" onclick="{ selectIcon }" icon="{{ $icon->getFilename() }}"><img src="@url($icon->getRealPath())" width="30" icon="{{ $icon->getFilename() }}"></a>
+                                    <a class="uk-dropdown-close" onclick="{ selectIcon }" icon="{{ $icon['filename'] }}"><img src="@url($icon['realpath'])" width="30" icon="{{ $icon['filename'] }}"></a>
                                 </div>
                                 @endforeach
                             </div>
